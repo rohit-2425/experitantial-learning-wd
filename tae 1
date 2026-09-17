@@ -3,370 +3,448 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Signal — Conference Speaker Directory</title>
+<title>Converge 2026 Speaker Directory</title>
+<script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --bg: #12141c;
-    --surface: #1b1f2b;
-    --surface-2: #232838;
-    --line: #2c3142;
-    --text: #edeef2;
-    --muted: #8b90a3;
-    --amber: #e8b54d;
-    --teal: #4fd1b5;
-  }
-  *{box-sizing:border-box;}
-  body{
-    margin:0;
-    background:var(--bg);
-    color:var(--text);
-    font-family:'Inter',sans-serif;
-    -webkit-font-smoothing:antialiased;
-  }
-  h1,h2,h3,.display{
-    font-family:'Fraunces',serif;
-    font-weight:600;
-    letter-spacing:-0.01em;
-  }
-  .app{max-width:1100px;margin:0 auto;padding:32px 24px 80px;}
-
-  /* header */
-  .masthead{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:28px;border-bottom:1px solid var(--line);padding-bottom:24px;}
-  .masthead h1{font-size:32px;margin:0 0 6px;}
-  .masthead p{margin:0;color:var(--muted);font-size:14px;max-width:36ch;}
-  .ticket{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;}
-
-  /* nav tabs */
-  .tabs{display:flex;gap:4px;margin-bottom:24px;}
-  .tab{
-    background:none;border:1px solid var(--line);color:var(--muted);
-    padding:9px 18px;border-radius:8px;font-size:14px;font-family:'Inter';
-    cursor:pointer;transition:all .15s ease;
-  }
-  .tab:hover{color:var(--text);border-color:#454c63;}
-  .tab.active{background:var(--surface-2);color:var(--text);border-color:var(--amber);}
-
-  /* search + filters */
-  .controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:24px;}
-  input[type=text]{
-    flex:1;min-width:200px;background:var(--surface);border:1px solid var(--line);
-    color:var(--text);padding:10px 14px;border-radius:8px;font-size:14px;font-family:'Inter';
-  }
-  input[type=text]:focus{outline:none;border-color:var(--amber);}
-  .tags{display:flex;flex-wrap:wrap;gap:8px;}
-  .tag-btn{
-    background:var(--surface);border:1px solid var(--line);color:var(--muted);
-    padding:6px 12px;border-radius:999px;font-size:12.5px;cursor:pointer;transition:all .15s ease;
-  }
-  .tag-btn:hover{color:var(--text);}
-  .tag-btn.active{background:rgba(232,181,77,0.15);border-color:var(--amber);color:var(--amber);}
-
-  /* speaker grid */
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;}
-  .card{
-    background:var(--surface);border:1px solid var(--line);border-radius:12px;
-    padding:18px;cursor:pointer;transition:border-color .15s ease, transform .15s ease;
-    text-align:left;
-  }
-  .card:hover{border-color:#454c63;transform:translateY(-2px);}
-  .card:focus-visible{outline:2px solid var(--amber);outline-offset:2px;}
-  .avatar{
-    width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;
-    font-family:'Fraunces';font-weight:600;font-size:18px;color:#12141c;margin-bottom:12px;
-  }
-  .card h3{font-size:17px;margin:0 0 2px;}
-  .card .role{color:var(--muted);font-size:13px;margin:0 0 12px;}
-  .chip-row{display:flex;flex-wrap:wrap;gap:6px;}
-  .chip{background:var(--surface-2);color:var(--muted);font-size:11px;padding:3px 9px;border-radius:999px;}
-
-  .empty{color:var(--muted);padding:40px 0;text-align:center;font-size:14px;}
-
-  /* detail panel */
-  .detail{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:28px;}
-  .back{background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;padding:0;margin-bottom:20px;}
-  .back:hover{color:var(--text);}
-  .detail-head{display:flex;gap:18px;align-items:center;margin-bottom:18px;}
-  .avatar-lg{width:72px;height:72px;border-radius:14px;font-size:26px;}
-  .detail-head h2{margin:0 0 4px;font-size:26px;}
-  .detail-head .role{color:var(--muted);font-size:14px;}
-  .bio{color:#c7c9d6;line-height:1.6;font-size:14.5px;margin-bottom:22px;}
-  .section-label{font-size:12px;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);margin:0 0 10px;font-weight:600;}
-  .session-row{
-    display:flex;justify-content:space-between;align-items:center;gap:12px;
-    padding:12px 14px;border:1px solid var(--line);border-radius:8px;margin-bottom:8px;
-  }
-  .session-row .t{color:var(--teal);font-size:12.5px;font-variant-numeric:tabular-nums;min-width:110px;}
-  .session-row .title{font-size:14px;flex:1;}
-  .session-row .room{color:var(--muted);font-size:12.5px;}
-
-  /* schedule view */
-  .day-tabs{display:flex;gap:8px;margin-bottom:20px;}
-  .schedule-list{display:flex;flex-direction:column;gap:10px;}
-  .sched-item{
-    background:var(--surface);border:1px solid var(--line);border-radius:10px;
-    padding:16px 18px;cursor:pointer;transition:border-color .15s ease;
-  }
-  .sched-item:hover{border-color:#454c63;}
-  .sched-top{display:flex;justify-content:space-between;gap:12px;align-items:baseline;}
-  .sched-time{color:var(--teal);font-size:13px;font-variant-numeric:tabular-nums;}
-  .sched-title{font-size:15.5px;font-weight:600;margin:4px 0 6px;font-family:'Fraunces';}
-  .sched-meta{color:var(--muted);font-size:13px;}
-  .sched-expand{margin-top:12px;padding-top:12px;border-top:1px solid var(--line);color:#c7c9d6;font-size:13.5px;line-height:1.6;}
-  .speaker-link{color:var(--amber);cursor:pointer;text-decoration:underline;text-underline-offset:2px;}
+  body { font-family: 'Inter', sans-serif; }
+  h1, h2, h3 { font-family: 'Space Grotesk', sans-serif; }
 </style>
 </head>
-<body>
-<div id="root" class="app"></div>
+<body class="bg-[#12131A] text-[#EDEEF3]">
 
-<script>
-const TOPIC_COLORS = {
-  "AI & ML": "#e8b54d",
-  "Design": "#4fd1b5",
-  "Security": "#e07a5f",
-  "Product": "#8ab4f8",
-  "Infrastructure": "#c792ea",
-  "Culture": "#f4a3c1"
-};
+  <div class="max-w-6xl mx-auto">
 
-const speakers = [
-  {id:"s1", name:"Renu Iyer", initials:"RI", role:"VP Engineering, Nimbus Cloud", topics:["Infrastructure","AI & ML"],
-   bio:"Renu leads platform engineering at Nimbus Cloud, where she rebuilt the deploy pipeline to ship 40 times a day. She spends her free time restoring old mechanical keyboards.",
-   color:"#e8b54d"},
-  {id:"s2", name:"Marcus Webb", initials:"MW", role:"Principal Designer, Fieldstone", topics:["Design","Product"],
-   bio:"Marcus has spent a decade designing tools for field technicians who can't look at a screen for more than three seconds at a time. He believes most software is over-designed.",
-   color:"#4fd1b5"},
-  {id:"s3", name:"Priya Chandrasekaran", initials:"PC", role:"Security Researcher, Independent", topics:["Security"],
-   bio:"Priya has disclosed vulnerabilities in three major browsers and one very embarrassed smart fridge manufacturer. She teaches a weekend workshop on threat modeling for small teams.",
-   color:"#e07a5f"},
-  {id:"s4", name:"Tomas Berg", initials:"TB", role:"Head of Product, Loomline", topics:["Product","Culture"],
-   bio:"Tomas has shipped four products that failed and one that didn't, and he talks about all five equally. He runs a newsletter about the ordinary parts of product work.",
-   color:"#8ab4f8"},
-  {id:"s5", name:"Aisha Bello", initials:"AB", role:"ML Engineer, Ferngate Labs", topics:["AI & ML","Infrastructure"],
-   bio:"Aisha builds the retrieval systems behind Ferngate's search product. Before that she trained models to identify crop disease from satellite images.",
-   color:"#c792ea"},
-  {id:"s6", name:"Jonah Reyes", initials:"JR", role:"Engineering Manager, Cortix", topics:["Culture","Product"],
-   bio:"Jonah manages a team of twelve across four time zones and writes candidly about the parts of management nobody puts in the job posting.",
-   color:"#f4a3c1"},
-  {id:"s7", name:"Lena Ostrowski", initials:"LO", role:"Staff Designer, Fieldstone", topics:["Design"],
-   bio:"Lena designs the internals nobody sees — admin panels, ops dashboards, the tools other designers forget exist. She thinks boring interfaces are underrated.",
-   color:"#4fd1b5"},
-  {id:"s8", name:"Devon Marsh", initials:"DM", role:"Distinguished Engineer, Nimbus Cloud", topics:["Infrastructure","Security"],
-   bio:"Devon has been on call for the same system for eleven years and has opinions about it. He's currently obsessed with making incident postmortems less miserable to write.",
-   color:"#e8b54d"}
-];
+    <!-- ================= HEADER ================= -->
+    <header class="px-6 md:px-12 py-12 md:py-16 border-b border-white/10">
+      <h1 class="text-4xl md:text-5xl font-bold leading-tight">Converge 2026<br>Speaker Directory</h1>
+      <p class="mt-4 max-w-xl text-[#9CA0B3] leading-relaxed">
+        Browse this year's lineup, filter speakers by topic, and see where each session falls across the two-day program.
+      </p>
 
-const sessions = [
-  {id:"e1", day:"Day 1", time:"9:30 AM", title:"Shipping 40 times a day without losing your mind", room:"Hall A", topic:"Infrastructure", speakerIds:["s1"],
-   detail:"A walkthrough of the deploy pipeline redesign at Nimbus Cloud, including the three rollbacks that taught them the most."},
-  {id:"e2", day:"Day 1", time:"10:15 AM", title:"Designing for people who can't look at the screen", room:"Hall B", topic:"Design", speakerIds:["s2","s7"],
-   detail:"Marcus and Lena compare notes on designing for field technicians and internal ops teams — two audiences nobody designs a portfolio piece for."},
-  {id:"e3", day:"Day 1", time:"11:30 AM", title:"What your smart fridge is telling strangers", room:"Hall C", topic:"Security", speakerIds:["s3"],
-   detail:"A live walkthrough of disclosing a real IoT vulnerability, from discovery to (eventual, reluctant) vendor response."},
-  {id:"e4", day:"Day 1", time:"1:30 PM", title:"Four failed products and what they had in common", room:"Hall A", topic:"Product", speakerIds:["s4"],
-   detail:"Tomas breaks down the pattern he only noticed after the fourth launch failed, and the one change that made the fifth work."},
-  {id:"e5", day:"Day 1", time:"2:45 PM", title:"Retrieval systems that don't fall over at scale", room:"Hall B", topic:"AI & ML", speakerIds:["s5"],
-   detail:"Lessons from building Ferngate's search index, including two architecture decisions Aisha would reverse if she started over."},
-  {id:"e6", day:"Day 2", time:"9:00 AM", title:"Managing a team you'll never meet in person", room:"Hall A", topic:"Culture", speakerIds:["s6"],
-   detail:"Jonah on running a fully distributed team across four time zones, and the meeting structure that finally stopped burning people out."},
-  {id:"e7", day:"Day 2", time:"10:30 AM", title:"Eleven years on call for the same system", room:"Hall C", topic:"Infrastructure", speakerIds:["s8"],
-   detail:"Devon on what actually changes about a system's failure modes over a decade, and rewriting postmortems so people stop dreading them."},
-  {id:"e8", day:"Day 2", time:"11:45 AM", title:"AI and infrastructure: who owns the pager now", room:"Hall B", topic:"AI & ML", speakerIds:["s1","s5","s8"],
-   detail:"A panel on where ML systems and traditional infra ownership blur, and who ends up holding the pager when a model starts misbehaving in production."},
-  {id:"e9", day:"Day 2", time:"1:15 PM", title:"Boring interfaces are underrated", room:"Hall B", topic:"Design", speakerIds:["s7"],
-   detail:"Lena makes the case for designing the unglamorous internal tools with the same care as customer-facing product — and what happens when you don't."},
-  {id:"e10", day:"Day 2", time:"2:30 PM", title:"The postmortem nobody wants to write", room:"Hall A", topic:"Culture", speakerIds:["s6","s8"],
-   detail:"Jonah and Devon on turning postmortems from blame documents into something engineers actually read and learn from."}
-];
-
-const allTopics = Object.keys(TOPIC_COLORS);
-
-let state = {
-  view: "directory", // directory | speaker | schedule
-  search: "",
-  activeTopic: null,
-  selectedSpeakerId: null,
-  scheduleDay: "Day 1"
-};
-
-function setState(patch){
-  state = Object.assign({}, state, patch);
-  render();
-}
-
-function speakerById(id){ return speakers.find(s => s.id === id); }
-function sessionsForSpeaker(id){ return sessions.filter(sn => sn.speakerIds.includes(id)); }
-
-function initialsAvatar(person, size){
-  const style = size === 'lg'
-    ? `class="avatar avatar-lg" style="background:${person.color}"`
-    : `class="avatar" style="background:${person.color}"`;
-  return `<div ${style}>${person.initials}</div>`;
-}
-
-function tagChips(topics){
-  return `<div class="chip-row">${topics.map(t => `<span class="chip">${t}</span>`).join('')}</div>`;
-}
-
-function renderTabs(){
-  return `
-    <div class="tabs">
-      <button class="tab ${state.view==='directory'?'active':''}" data-nav="directory">Directory</button>
-      <button class="tab ${state.view==='schedule'?'active':''}" data-nav="schedule">Schedule</button>
-    </div>`;
-}
-
-function renderDirectory(){
-  const q = state.search.trim().toLowerCase();
-  const filtered = speakers.filter(sp => {
-    const matchesSearch = !q || sp.name.toLowerCase().includes(q) || sp.role.toLowerCase().includes(q);
-    const matchesTopic = !state.activeTopic || sp.topics.includes(state.activeTopic);
-    return matchesSearch && matchesTopic;
-  });
-
-  return `
-    <div class="controls">
-      <input type="text" id="search-input" placeholder="Search speakers by name or role…" value="${state.search}">
-    </div>
-    <div class="tags" style="margin-bottom:24px;">
-      ${allTopics.map(t => `<button class="tag-btn ${state.activeTopic===t?'active':''}" data-topic="${t}">${t}</button>`).join('')}
-    </div>
-    ${filtered.length ? `<div class="grid">
-      ${filtered.map(sp => `
-        <button class="card" data-speaker="${sp.id}">
-          ${initialsAvatar(sp)}
-          <h3>${sp.name}</h3>
-          <p class="role">${sp.role}</p>
-          ${tagChips(sp.topics)}
-        </button>
-      `).join('')}
-    </div>` : `<div class="empty">No speakers match that search or filter.</div>`}
-  `;
-}
-
-function renderSpeakerDetail(){
-  const sp = speakerById(state.selectedSpeakerId);
-  if(!sp) return renderDirectory();
-  const mySessions = sessionsForSpeaker(sp.id);
-  return `
-    <button class="back" data-nav="directory">&larr; Back to directory</button>
-    <div class="detail">
-      <div class="detail-head">
-        ${initialsAvatar(sp, 'lg')}
+      <div class="mt-10 flex flex-wrap gap-8">
         <div>
-          <h2>${sp.name}</h2>
-          <div class="role">${sp.role}</div>
+          <p class="text-3xl font-bold" id="statSpeakerCount">0</p>
+          <p class="text-sm text-[#9CA0B3] mt-1">Speakers</p>
+        </div>
+        <div class="border-l border-white/10 pl-8">
+          <p class="text-3xl font-bold" id="statTrackCount">0</p>
+          <p class="text-sm text-[#9CA0B3] mt-1">Topic tracks</p>
+        </div>
+        <div class="border-l border-white/10 pl-8">
+          <p class="text-3xl font-bold" id="statDayCount">0</p>
+          <p class="text-sm text-[#9CA0B3] mt-1">Program days</p>
         </div>
       </div>
-      ${tagChips(sp.topics)}
-      <p class="bio" style="margin-top:18px;">${sp.bio}</p>
-      <p class="section-label">Sessions (${mySessions.length})</p>
-      ${mySessions.map(sn => `
-        <div class="session-row">
-          <span class="t">${sn.day} · ${sn.time}</span>
-          <span class="title">${sn.title}</span>
-          <span class="room">${sn.room}</span>
-        </div>
-      `).join('')}
-    </div>
-  `;
-}
+    </header>
 
-function renderSchedule(){
-  const days = ["Day 1","Day 2"];
-  const daySessions = sessions
-    .filter(sn => sn.day === state.scheduleDay)
-    .filter(sn => !state.activeTopic || sn.topic === state.activeTopic)
-    .sort((a,b) => a.time.localeCompare(b.time));
+    <!-- ================= SEARCH + FILTER ================= -->
+    <section class="px-6 md:px-12 py-8 border-b border-white/10">
+      <input
+        id="searchInput"
+        type="text"
+        placeholder="Search speakers by name or role"
+        class="w-full max-w-md rounded-md bg-[#1B1D2A] border border-white/10 px-4 py-2 text-sm placeholder-[#9CA0B3] focus:outline-none focus:ring-2 focus:ring-[#E8A33D]"
+      >
+      <div id="tagFilters" class="flex flex-wrap gap-2 mt-4"></div>
+    </section>
 
-  return `
-    <div class="day-tabs">
-      ${days.map(d => `<button class="tab ${state.scheduleDay===d?'active':''}" data-day="${d}">${d}</button>`).join('')}
-    </div>
-    <div class="tags" style="margin-bottom:24px;">
-      ${allTopics.map(t => `<button class="tag-btn ${state.activeTopic===t?'active':''}" data-topic="${t}">${t}</button>`).join('')}
-    </div>
-    ${daySessions.length ? `<div class="schedule-list">
-      ${daySessions.map(sn => `
-        <div class="sched-item" data-session="${sn.id}">
-          <div class="sched-top">
-            <span class="sched-time">${sn.time} · ${sn.room}</span>
-            <span class="chip" style="background:${TOPIC_COLORS[sn.topic]}22;color:${TOPIC_COLORS[sn.topic]};">${sn.topic}</span>
-          </div>
-          <div class="sched-title">${sn.title}</div>
-          <div class="sched-meta">${sn.speakerIds.map(id => speakerById(id).name).join(', ')}</div>
-          ${state.expandedSession===sn.id ? `
-            <div class="sched-expand">
-              ${sn.detail}<br><br>
-              Speaking: ${sn.speakerIds.map(id => `<span class="speaker-link" data-speaker="${id}">${speakerById(id).name}</span>`).join(', ')}
-            </div>
-          ` : ''}
-        </div>
-      `).join('')}
-    </div>` : `<div class="empty">No sessions match that filter for ${state.scheduleDay}.</div>`}
-  `;
-}
+    <!-- ================= SPEAKER GRID ================= -->
+    <section class="px-6 md:px-12 py-10">
+      <h2 class="text-xl font-semibold mb-6">Speakers</h2>
+      <div id="speakerGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+      <p id="noResults" class="hidden text-[#9CA0B3] mt-6">No speakers match your search.</p>
+    </section>
 
-function render(){
-  const root = document.getElementById('root');
-  let body;
-  if(state.view === 'speaker') body = renderSpeakerDetail();
-  else if(state.view === 'schedule') body = renderSchedule();
-  else body = renderDirectory();
+    <!-- ================= SESSION SCHEDULE ================= -->
+    <section class="px-6 md:px-12 py-10 border-t border-white/10">
+      <h2 class="text-xl font-semibold mb-6">Session schedule</h2>
 
-  root.innerHTML = `
-    <div class="masthead">
-      <div>
-        <h1>Signal Conference</h1>
-        <p>Speaker directory and session schedule for the two-day event.</p>
+      <div class="flex gap-2 mb-6">
+        <button
+          class="day-tab text-sm px-4 py-1.5 rounded-full border bg-transparent text-[#9CA0B3] border-white/15 transition-colors focus:outline-none focus:ring-2 focus:ring-[#E8A33D]"
+          data-day="1"
+        >Day 1</button>
+        <button
+          class="day-tab text-sm px-4 py-1.5 rounded-full border bg-transparent text-[#9CA0B3] border-white/15 transition-colors focus:outline-none focus:ring-2 focus:ring-[#E8A33D]"
+          data-day="2"
+        >Day 2</button>
       </div>
-      <div class="ticket">WD-T1-197</div>
+
+      <div id="scheduleList" class="space-y-3"></div>
+    </section>
+
+    <!-- ================= FOOTER ================= -->
+    <footer class="px-6 md:px-12 py-8 text-sm text-[#9CA0B3] border-t border-white/10">
+      Converge 2026 speaker directory, built for challenge WD-T1-197.
+    </footer>
+
+  </div>
+
+  <!-- ================= SPEAKER MODAL ================= -->
+  <div id="speakerModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+    <div class="bg-[#1B1D2A] border border-white/10 rounded-lg max-w-lg w-full p-6 relative max-h-[85vh] overflow-y-auto">
+      <button
+        id="closeModalBtn"
+        class="absolute top-4 right-4 text-[#9CA0B3] hover:text-white text-xl leading-none focus:outline-none focus:ring-2 focus:ring-[#E8A33D] rounded"
+        aria-label="Close"
+      >&times;</button>
+      <div id="modalContent"></div>
     </div>
-    ${state.view !== 'speaker' ? renderTabs() : ''}
-    ${body}
-  `;
+  </div>
 
-  wireEvents();
-  if(document.getElementById('search-input')){
-    document.getElementById('search-input').focus();
-    const el = document.getElementById('search-input');
-    el.setSelectionRange(el.value.length, el.value.length);
-  }
-}
+  <script>
+    // ============================================================
+    // DATA
+    // These arrays are the "database" for the whole page.
+    // Every speaker card, tag, and schedule row is built from this.
+    // ============================================================
 
-function wireEvents(){
-  document.querySelectorAll('[data-nav]').forEach(el => {
-    el.addEventListener('click', () => setState({view: el.dataset.nav, selectedSpeakerId: null}));
-  });
-  document.querySelectorAll('[data-speaker]').forEach(el => {
-    el.addEventListener('click', (e) => {
-      e.stopPropagation();
-      setState({view:'speaker', selectedSpeakerId: el.dataset.speaker});
-    });
-  });
-  document.querySelectorAll('[data-topic]').forEach(el => {
-    el.addEventListener('click', () => {
-      const t = el.dataset.topic;
-      setState({activeTopic: state.activeTopic === t ? null : t});
-    });
-  });
-  document.querySelectorAll('[data-day]').forEach(el => {
-    el.addEventListener('click', () => setState({scheduleDay: el.dataset.day, activeTopic: null}));
-  });
-  document.querySelectorAll('[data-session]').forEach(el => {
-    el.addEventListener('click', () => {
-      const id = el.dataset.session;
-      setState({expandedSession: state.expandedSession === id ? null : id});
-    });
-  });
-  const searchInput = document.getElementById('search-input');
-  if(searchInput){
-    searchInput.addEventListener('input', (e) => setState({search: e.target.value}));
-  }
-}
+    const speakers = [
+      {
+        id: 1,
+        name: "Priya Nair",
+        role: "Senior Frontend Engineer, Nimbus Labs",
+        tracks: ["Web Development", "UX Design"],
+        shortBio: "Builds design systems used by frontend teams across three continents.",
+        bio: "Priya leads the frontend platform team at Nimbus Labs, where she built the component library now used by over forty product teams. She has spent the last two years pairing design and engineering workflows so that neither side has to guess what the other needs."
+      },
+      {
+        id: 2,
+        name: "Marcus Chen",
+        role: "ML Research Lead, Fathom AI",
+        tracks: ["AI & ML"],
+        shortBio: "Leads applied research on retrieval and reasoning at Fathom AI.",
+        bio: "Marcus runs the applied research group at Fathom AI, focusing on retrieval-augmented reasoning systems. Before that, he spent six years publishing on sequence modeling and now spends most of his time explaining why the results are harder to reproduce than the papers suggest."
+      },
+      {
+        id: 3,
+        name: "Fatima Al-Sayed",
+        role: "Cloud Architect, Ridgeline Systems",
+        tracks: ["Cloud & DevOps"],
+        shortBio: "Designs multi-region cloud infrastructure for high-traffic platforms.",
+        bio: "Fatima designs the multi-region infrastructure behind several high-traffic consumer platforms. She is especially interested in the unglamorous parts of reliability work: rollback plans, capacity headroom, and the incident reviews nobody wants to write."
+      },
+      {
+        id: 4,
+        name: "Diego Ramirez",
+        role: "Security Consultant, Wardline Security",
+        tracks: ["Cybersecurity"],
+        shortBio: "Runs red-team engagements for financial and healthcare clients.",
+        bio: "Diego has spent a decade running red-team engagements for financial and healthcare clients, and now trains internal security teams to think like attackers before the attackers do. He believes most breaches start with a bored employee, not a sophisticated exploit."
+      },
+      {
+        id: 5,
+        name: "Hannah Kowalski",
+        role: "Product Designer, Fieldnote",
+        tracks: ["UX Design"],
+        shortBio: "Designs field tools for construction and logistics workers.",
+        bio: "Hannah designs field software for construction and logistics crews, which means testing prototypes on job sites in the rain rather than in a conference room. Her talks usually come with a story about a design decision that only survived first contact with a real user."
+      },
+      {
+        id: 6,
+        name: "Kenji Watanabe",
+        role: "Data Scientist, Northbay Analytics",
+        tracks: ["Data Science", "AI & ML"],
+        shortBio: "Builds forecasting models for retail demand planning.",
+        bio: "Kenji builds demand forecasting models used by retail planning teams to decide what to stock months in advance. He is currently more interested in explaining model uncertainty to non-technical stakeholders than in squeezing out another point of accuracy."
+      },
+      {
+        id: 7,
+        name: "Aisha Bello",
+        role: "DevOps Engineer, Ridgeline Systems",
+        tracks: ["Cloud & DevOps", "Cybersecurity"],
+        shortBio: "Builds deployment pipelines with security checks built in.",
+        bio: "Aisha builds the deployment pipelines at Ridgeline Systems, with security scanning built into every stage rather than bolted on at the end. She is a strong believer that the easiest vulnerability to fix is the one caught before it ships."
+      },
+      {
+        id: 8,
+        name: "Sam O'Connor",
+        role: "Full-Stack Developer, Freelance",
+        tracks: ["Web Development"],
+        shortBio: "Freelance developer building tools for independent creators.",
+        bio: "Sam is a freelance developer who builds small, focused tools for independent creators, things like invoice generators and simple booking pages. He talks often about the tradeoffs of picking boring, reliable technology over the newest framework."
+      }
+    ];
 
-render();
-</script>
+    const sessions = [
+      { id: 1,  day: 1, time: "9:30 AM",  room: "Hall A",   title: "Design Systems at Scale",                     track: "Web Development", speakerId: 1 },
+      { id: 2,  day: 1, time: "9:30 AM",  room: "Studio 1", title: "Retrieval-Augmented Reasoning in Practice",   track: "AI & ML",          speakerId: 2 },
+      { id: 3,  day: 1, time: "11:00 AM", room: "Hall B",   title: "Designing for the Job Site",                  track: "UX Design",        speakerId: 5 },
+      { id: 4,  day: 1, time: "11:00 AM", room: "Hall A",   title: "Multi-Region Infrastructure Without the Guesswork", track: "Cloud & DevOps", speakerId: 3 },
+      { id: 5,  day: 1, time: "2:00 PM",  room: "Studio 2", title: "Forecasting Under Uncertainty",               track: "Data Science",     speakerId: 6 },
+      { id: 6,  day: 1, time: "3:30 PM",  room: "Hall B",   title: "How Most Breaches Actually Start",            track: "Cybersecurity",    speakerId: 4 },
+      { id: 7,  day: 2, time: "9:30 AM",  room: "Studio 1", title: "Security Built Into the Pipeline",            track: "Cloud & DevOps",   speakerId: 7 },
+      { id: 8,  day: 2, time: "9:30 AM",  room: "Hall A",   title: "Boring Technology, Reliable Products",        track: "Web Development", speakerId: 8 },
+      { id: 9,  day: 2, time: "11:00 AM", room: "Hall B",   title: "What Design Systems Get Wrong",               track: "UX Design",        speakerId: 1 },
+      { id: 10, day: 2, time: "11:00 AM", room: "Studio 2", title: "Explaining Models to Non-Technical Teams",    track: "AI & ML",          speakerId: 6 },
+      { id: 11, day: 2, time: "2:00 PM",  room: "Hall A",   title: "Capacity Planning Before You Need It",        track: "Cloud & DevOps",   speakerId: 3 },
+      { id: 12, day: 2, time: "3:30 PM",  room: "Studio 1", title: "Where Reasoning Models Still Fail",           track: "AI & ML",          speakerId: 2 }
+    ];
+
+    const trackColors = {
+      "Web Development": "#2DD4BF",
+      "AI & ML": "#A78BFA",
+      "Cloud & DevOps": "#FB923C",
+      "UX Design": "#F472B6",
+      "Cybersecurity": "#F87171",
+      "Data Science": "#38BDF8"
+    };
+
+    // ============================================================
+    // STATE
+    // Plain variables that track what the user has currently selected.
+    // ============================================================
+
+    let currentTag = "All";
+    let currentSearch = "";
+    let currentDay = 1;
+
+    // ============================================================
+    // HELPER FUNCTIONS
+    // ============================================================
+
+    function getInitials(name) {
+      const parts = name.split(" ");
+      const first = parts[0] ? parts[0][0] : "";
+      const last = parts.length > 1 ? parts[parts.length - 1][0] : "";
+      return (first + last).toUpperCase();
+    }
+
+    function getTrackColor(track) {
+      return trackColors[track] || "#9CA0B3";
+    }
+
+    // Collects every unique track name across all speakers, in order.
+    function getAllTracks() {
+      const tracks = [];
+      speakers.forEach(function (speaker) {
+        speaker.tracks.forEach(function (track) {
+          if (!tracks.includes(track)) {
+            tracks.push(track);
+          }
+        });
+      });
+      return tracks;
+    }
+
+    function tagPillHTML(track) {
+      const color = getTrackColor(track);
+      return '<span class="text-xs font-medium px-2 py-1 rounded-full" style="background-color:' + color + '26; color:' + color + '">' + track + '</span>';
+    }
+
+    // ============================================================
+    // RENDER FUNCTIONS
+    // Each one rebuilds a piece of the page from the data + state above.
+    // ============================================================
+
+    function renderStats() {
+      document.getElementById("statSpeakerCount").textContent = speakers.length;
+      document.getElementById("statTrackCount").textContent = getAllTracks().length;
+
+      const days = [];
+      sessions.forEach(function (session) {
+        if (!days.includes(session.day)) {
+          days.push(session.day);
+        }
+      });
+      document.getElementById("statDayCount").textContent = days.length;
+    }
+
+    function renderTagFilters() {
+      const container = document.getElementById("tagFilters");
+      const tracks = ["All"].concat(getAllTracks());
+
+      let html = "";
+      tracks.forEach(function (track) {
+        const isActive = track === currentTag;
+        const base = "tag-filter-btn text-sm px-3 py-1.5 rounded-full border transition-colors focus:outline-none focus:ring-2 focus:ring-[#E8A33D] ";
+        const activeClasses = "bg-[#E8A33D] border-[#E8A33D] text-[#12131A]";
+        const inactiveClasses = "bg-transparent border-white/15 text-[#9CA0B3] hover:border-white/30";
+        html += '<button class="' + base + (isActive ? activeClasses : inactiveClasses) + '" data-track="' + track + '">' + track + '</button>';
+      });
+
+      container.innerHTML = html;
+    }
+
+    function speakerCardHTML(speaker) {
+      const primaryColor = getTrackColor(speaker.tracks[0]);
+      const tagsHTML = speaker.tracks.map(tagPillHTML).join(" ");
+
+      return (
+        '<div class="speaker-card cursor-pointer rounded-lg bg-[#1B1D2A] border border-white/10 p-5 hover:border-white/25 transition-colors" data-id="' + speaker.id + '">' +
+          '<div class="flex items-center gap-4">' +
+            '<div class="w-12 h-12 shrink-0 rounded-full flex items-center justify-center font-semibold text-[#12131A]" style="background-color:' + primaryColor + '">' + getInitials(speaker.name) + '</div>' +
+            '<div>' +
+              '<h3 class="font-semibold">' + speaker.name + '</h3>' +
+              '<p class="text-sm text-[#9CA0B3]">' + speaker.role + '</p>' +
+            '</div>' +
+          '</div>' +
+          '<p class="text-sm text-[#9CA0B3] mt-4">' + speaker.shortBio + '</p>' +
+          '<div class="flex flex-wrap gap-2 mt-4">' + tagsHTML + '</div>' +
+        '</div>'
+      );
+    }
+
+    function renderSpeakers() {
+      const grid = document.getElementById("speakerGrid");
+      const noResults = document.getElementById("noResults");
+
+      const filtered = speakers.filter(function (speaker) {
+        const matchesTag = currentTag === "All" || speaker.tracks.includes(currentTag);
+        const searchText = (speaker.name + " " + speaker.role).toLowerCase();
+        const matchesSearch = searchText.includes(currentSearch.toLowerCase());
+        return matchesTag && matchesSearch;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = "";
+        noResults.classList.remove("hidden");
+      } else {
+        noResults.classList.add("hidden");
+        grid.innerHTML = filtered.map(speakerCardHTML).join("");
+      }
+    }
+
+    function sessionRowHTML(session) {
+      const speaker = speakers.find(function (s) { return s.id === session.speakerId; });
+      const color = getTrackColor(session.track);
+
+      return (
+        '<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-lg bg-[#1B1D2A] border border-white/10 p-4">' +
+          '<div>' +
+            '<p class="text-sm text-[#9CA0B3]">' + session.time + ' in ' + session.room + '</p>' +
+            '<h3 class="font-semibold mt-1">' + session.title + '</h3>' +
+            '<button class="speaker-link text-sm mt-1 focus:outline-none focus:underline" style="color:' + color + '" data-id="' + speaker.id + '">' + speaker.name + '</button>' +
+          '</div>' +
+          '<span class="text-xs font-medium px-2 py-1 rounded-full self-start sm:self-center" style="background-color:' + color + '26; color:' + color + '">' + session.track + '</span>' +
+        '</div>'
+      );
+    }
+
+    function renderSchedule() {
+      const list = document.getElementById("scheduleList");
+      const daySessions = sessions.filter(function (session) { return session.day === currentDay; });
+      list.innerHTML = daySessions.map(sessionRowHTML).join("");
+    }
+
+    function renderDayTabs() {
+      document.querySelectorAll(".day-tab").forEach(function (btn) {
+        const day = Number(btn.dataset.day);
+        if (day === currentDay) {
+          btn.classList.add("bg-[#E8A33D]", "text-[#12131A]", "border-[#E8A33D]");
+          btn.classList.remove("bg-transparent", "text-[#9CA0B3]", "border-white/15");
+        } else {
+          btn.classList.remove("bg-[#E8A33D]", "text-[#12131A]", "border-[#E8A33D]");
+          btn.classList.add("bg-transparent", "text-[#9CA0B3]", "border-white/15");
+        }
+      });
+    }
+
+    // ============================================================
+    // MODAL (speaker detail + their sessions)
+    // ============================================================
+
+    function openSpeakerModal(id) {
+      const speaker = speakers.find(function (s) { return s.id === id; });
+      if (!speaker) return;
+
+      const mySessions = sessions.filter(function (s) { return s.speakerId === id; });
+      const primaryColor = getTrackColor(speaker.tracks[0]);
+
+      let sessionsHTML = "";
+      if (mySessions.length === 0) {
+        sessionsHTML = '<p class="text-sm text-[#9CA0B3] mt-2">No sessions scheduled yet.</p>';
+      } else {
+        sessionsHTML = '<ul class="space-y-2 mt-2">' + mySessions.map(function (s) {
+          return '<li class="text-sm text-[#9CA0B3]">Day ' + s.day + ', ' + s.time + ' — ' + s.title + ' (' + s.room + ')</li>';
+        }).join("") + '</ul>';
+      }
+
+      document.getElementById("modalContent").innerHTML =
+        '<div class="flex items-center gap-4">' +
+          '<div class="w-14 h-14 shrink-0 rounded-full flex items-center justify-center font-semibold text-lg text-[#12131A]" style="background-color:' + primaryColor + '">' + getInitials(speaker.name) + '</div>' +
+          '<div>' +
+            '<h3 class="text-lg font-semibold">' + speaker.name + '</h3>' +
+            '<p class="text-sm text-[#9CA0B3]">' + speaker.role + '</p>' +
+          '</div>' +
+        '</div>' +
+        '<div class="flex flex-wrap gap-2 mt-4">' + speaker.tracks.map(tagPillHTML).join(" ") + '</div>' +
+        '<p class="text-sm text-[#EDEEF3] mt-4 leading-relaxed">' + speaker.bio + '</p>' +
+        '<h4 class="text-sm font-semibold mt-6 text-[#9CA0B3]">Sessions</h4>' +
+        sessionsHTML;
+
+      document.getElementById("speakerModal").classList.remove("hidden");
+    }
+
+    function closeSpeakerModal() {
+      document.getElementById("speakerModal").classList.add("hidden");
+    }
+
+    // ============================================================
+    // EVENT LISTENERS
+    // ============================================================
+
+    document.getElementById("searchInput").addEventListener("input", function (e) {
+      currentSearch = e.target.value;
+      renderSpeakers();
+    });
+
+    // Event delegation: one listener on the container instead of one per button.
+    document.getElementById("tagFilters").addEventListener("click", function (e) {
+      const btn = e.target.closest(".tag-filter-btn");
+      if (!btn) return;
+      currentTag = btn.dataset.track;
+      renderTagFilters();
+      renderSpeakers();
+    });
+
+    document.getElementById("speakerGrid").addEventListener("click", function (e) {
+      const card = e.target.closest(".speaker-card");
+      if (!card) return;
+      openSpeakerModal(Number(card.dataset.id));
+    });
+
+    document.getElementById("scheduleList").addEventListener("click", function (e) {
+      const link = e.target.closest(".speaker-link");
+      if (!link) return;
+      openSpeakerModal(Number(link.dataset.id));
+    });
+
+    document.querySelectorAll(".day-tab").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        currentDay = Number(btn.dataset.day);
+        renderDayTabs();
+        renderSchedule();
+      });
+    });
+
+    document.getElementById("closeModalBtn").addEventListener("click", closeSpeakerModal);
+
+    // Close the modal when clicking the dark backdrop, not the card itself.
+    document.getElementById("speakerModal").addEventListener("click", function (e) {
+      if (e.target.id === "speakerModal") {
+        closeSpeakerModal();
+      }
+    });
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") {
+        closeSpeakerModal();
+      }
+    });
+
+    // ============================================================
+    // INITIAL RENDER
+    // ============================================================
+
+    renderStats();
+    renderTagFilters();
+    renderSpeakers();
+    renderDayTabs();
+    renderSchedule();
+  </script>
+
 </body>
 </html>
